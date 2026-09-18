@@ -65,34 +65,10 @@ cd busqueda_informada
 ```
 O simplemente abre una terminal en la carpeta raíz del proyecto.
 
----
-
-### 2. (Recomendado) Crear un entorno virtual
-
-Se recomienda crear un entorno virtual para aislar las dependencias del proyecto.
-
-- **En Windows (PowerShell):**
-  ```powershell
-  python -m venv venv
-  .\venv\Scripts\Activate.ps1
-  ```
-  *(Si PowerShell restringe la ejecución de scripts, puedes habilitarlo con: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
-
-- **En Windows (CMD):**
-  ```cmd
-  python -m venv venv
-  .\venv\Scripts\activate.bat
-  ```
-
-- **En macOS / Linux:**
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate
-  ```
 
 ---
 
-### 3. Instalar las dependencias
+### 2. Instalar las dependencias
 
 Con el entorno virtual activado (o directamente en tu instalación global de Python), instala las librerías necesarias ejecutando:
 
@@ -104,7 +80,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Uso y Ejecución
+## 3. Uso y Ejecución
 
 Para iniciar la simulación y generar la comparativa, ejecuta el script principal:
 
@@ -122,7 +98,7 @@ python main.py
 
 ---
 
-## 🧠 Formulación del Problema
+##  Formulación del Problema
 
 - **Espacio de Estados**: Coordenadas `(fila, columna)` dentro de la cuadrícula marítima.
 - **Estado Inicial**: Coordenada del puerto de salida (`(10, 1)`).
@@ -135,7 +111,7 @@ python main.py
 
 ---
 
-## 📊 Métricas Comparativas
+##  Métricas Comparativas
 
 Al ejecutar el programa se evalúan:
 - **Costo total**: Suma del costo de las acciones del camino solución.
