@@ -105,13 +105,13 @@ def dibujar_escenario(
     if ruta_gbfs:
         xs = [columna for fila, columna in ruta_gbfs]
         ys = [fila for fila, columna in ruta_gbfs]
-        ax.plot(xs, ys, linewidth=3.5, marker="o", markersize=4.5,
+        ax.plot(xs, ys, color="#2c7fb8", linewidth=3.5, marker="o", markersize=4.5,
                 label="Ruta GBFS")
 
     if ruta_astar:
         xs = [columna for fila, columna in ruta_astar]
         ys = [fila for fila, columna in ruta_astar]
-        ax.plot(xs, ys, linewidth=3.5, marker="s", markersize=4.0,
+        ax.plot(xs, ys, color="#8c4bb3", linewidth=3.5, marker="s", markersize=4.0,
                 label="Ruta A*")
 
     # Puerto inicial.
