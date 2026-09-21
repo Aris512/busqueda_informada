@@ -1,25 +1,11 @@
 """
-algoritmos.py
-Lógica del problema y algoritmos de búsqueda informada.
-
 ESCENARIO:
 Un barco debe navegar desde un puerto inicial hasta un puerto meta,
 evitando zonas de tormenta.
 
-FORMULACIÓN DEL PROBLEMA:
-- Estados: coordenadas (fila, columna) del barco en la cuadrícula.
-- Estado inicial: INICIO.
-- Estados meta: cualquiera de los estados contenidos en METAS.
-- Acciones/operadores: mover arriba, abajo, izquierda o derecha.
-- Función de costo: cada movimiento cuesta 1 unidad.
-- Heurística h(n): distancia Manhattan al puerto meta.
-
 La heurística es:
     h(n) = |fila_n - fila_meta| + |columna_n - columna_meta|
 
-Es admisible porque un movimiento ortogonal cuesta al menos 1 y la
-distancia Manhattan representa el mínimo número de movimientos necesarios
-si no existieran obstáculos.
 
 También es consistente:
     h(n) <= costo(n,n') + h(n')
@@ -111,22 +97,15 @@ def costo_ruta(ruta):
 
 def gbfs(inicio=INICIO, metas=METAS):
     """
-    Greedy Best-First Search.
-
-    Función de evaluación:
-        f(n) = h(n)
-
-    GBFS selecciona el nodo que parece estar más cerca de la meta.
-    No utiliza el costo acumulado g(n), por lo que no garantiza
-    encontrar una ruta óptima.
+    Greedy Best-First Search. Función de evaluación: f(n) = h(n)
     """
     mapa = crear_mapa()
-
     # (prioridad, contador, estado)
     # El contador evita problemas de desempate entre coordenadas.
-    frontera = []
+    "lista de estado qeu estan pendientes a explorar"
+    frontera = [] 
     contador = 0
-
+    "agregamos el estado inicial"
     heappush(frontera, (heuristica(inicio, metas), contador, inicio))
 
     came_from = {}
@@ -135,15 +114,17 @@ def gbfs(inicio=INICIO, metas=METAS):
     max_frontera = 1
 
     while frontera:
+        "se extare el que posee menor prioridad h(n)"
         _, _, actual = heappop(frontera)
+
 
         if actual in visitados:
             continue
 
-        # El nodo se considera expandido al retirarlo de la frontera.
+        "el nodo se considera expandido al retirarlo de la frontera"
         visitados.add(actual)
         expandidos.append(actual)
-
+        "si el estado actual es la meta, se reconstruye la ruta."
         if actual in metas:
             ruta = reconstruir_ruta(came_from, actual)
             return {
@@ -155,8 +136,10 @@ def gbfs(inicio=INICIO, metas=METAS):
                 "frontera_final": len(frontera),
                 "explorados": expandidos,
             }
-
+        "expandir los vecinos, se entregan vecinos validos por el metodo de transiciones"
         for vecino, _ in transiciones(actual, mapa):
+
+            "sino esta dentro de la lista de los visitados ni tampoco de came_from, se agrega + de donde proviene"
             if vecino not in visitados and vecino not in came_from:
                 came_from[vecino] = actual
                 contador += 1
@@ -179,26 +162,16 @@ def gbfs(inicio=INICIO, metas=METAS):
 
 
 def a_estrella(inicio=INICIO, metas=METAS):
-    """
-    A*.
-
-    Función de evaluación:
-        f(n) = g(n) + h(n)
-
-    g(n): costo real acumulado desde el inicio.
-    h(n): estimación del costo restante.
-
-    Con la heurística Manhattan utilizada aquí, que es admisible y
-    consistente, A* encuentra una ruta de costo mínimo.
+    """Función:f(n) = g(n) + h(n)  g(n): costo real acumulado desde el inicio y  h(n): estimación del costo restante.
     """
     mapa = crear_mapa()
 
     frontera = []
     contador = 0
-
+    "incio tiene un costo acumulado 0"
     g_score = {inicio: 0}
     came_from = {}
-
+    "agregamos el estado inicial"
     f_inicial = heuristica(inicio, metas)
     heappush(frontera, (f_inicial, contador, inicio))
 
@@ -207,6 +180,7 @@ def a_estrella(inicio=INICIO, metas=METAS):
     max_frontera = 1
 
     while frontera:
+        "se extrae el menor valor de f(n)"
         _, _, actual = heappop(frontera)
 
         if actual in cerrados:
@@ -228,21 +202,23 @@ def a_estrella(inicio=INICIO, metas=METAS):
                 "frontera_final": len(frontera),
                 "explorados": expandidos,
             }
-
+        
+        "se calcula el costo de cada vecino"
         for vecino, costo in transiciones(actual, mapa):
             if vecino in cerrados:
                 continue
 
             costo_tentativo = g_score[actual] + costo
 
-            # Solo actualizamos si encontramos una ruta más barata.
+            "solo actualizamos si se encuentram una ruta más barata"
             if costo_tentativo < g_score.get(vecino, inf):
                 came_from[vecino] = actual
                 g_score[vecino] = costo_tentativo
-
+                "utiliza el g(n) + h(n) para el calculo de prioridad de un vecino"
                 f_score = costo_tentativo + heuristica(vecino, metas)
 
                 contador += 1
+                "lo agregamos a frontera para luego ser explorado"
                 heappush(
                     frontera,
                     (f_score, contador, vecino)
